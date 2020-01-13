@@ -20,28 +20,31 @@ NAME=$1
 # Example 3: The name contains a sequence number which maps directly to a range
 # of local IP addresses
 # NUM=${NAME##*-}
-#IP="192.168.123.$[ $NUM + 1 ]"
-IP="192.168.122.111"
+#IP="0.0000116"
+#myWordCount = 0.76
+#stateMachines = 0.99
+#TopSpeedWindow = 0.0546
+#WindowJoin =  0.3167
+Slope=1
 # echo $IP
 if test "$NAME" = "ubuntu01"
 then
-        IP="192.168.122.120"
+        Slope="400"
 fi
 
 if test "$NAME" = "ubuntu02"
 then
-        IP="192.168.122.201"
+        Slope="0.99"
 fi
 
 if test "$NAME" = "ubuntu03"
 then
-        IP="192.168.122.111"
+        Slope="0.99"
 fi
 
 if test "$NAME" = "ubuntu04"
 then
-        IP="192.168.122.176"
+        Slope="0.78"
 fi
 
-echo $IP
-
+echo $Slope

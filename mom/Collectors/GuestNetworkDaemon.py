@@ -159,7 +159,8 @@ class GuestNetworkDaemon(Collector):
 
     def getFields(self=None):
         return set(['mem_available', 'mem_unused', 'major_fault', 'minor_fault',
-                    'swap_in', 'swap_out'])
+                    'swap_in', 'swap_out', 'swap_total', 'swap_usage', 
+                    'user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'total'])
 
 #
 # Begin Server-side code that runs on the guest
@@ -191,6 +192,7 @@ class _Server:
         if self.vmstat is not None:
             self.vmstat.close()
 
+
     def send_props(self, conn):
         response = "min_free:" + self.min_free + ",max_free:" + self.max_free
         sock_send(conn, response)
@@ -202,11 +204,28 @@ class _Server:
         minflt = parse_int("^pgfault (.*)", contents)
         majflt = parse_int("^pgmajfault (.*)", contents)
 
-        response = "mem_available:%i,mem_unused:%i,swap_in:%i,swap_out:%i," \
-                   "major_fault:%i,minor_fault:%i" % \
+        # DRG
+        stat = open_datafile("/proc/stat")
+        stats = stat.readline().split()
+        user = int(stats[1])
+        nice = int(stats[2])
+        system = int(stats[3])
+        idle = int(stats[4])
+        iowait = int(stats[5])
+        irq = int(stats[6])
+        softirq = int(stats[7])
+        steal = int(stats[8])
+        total = user + nice + system + idle + iowait + irq + softirq + steal
+        #self.logger.info("iowait:%s, irq:%s", iowait, irq)
+
+        response = "mem_available:%i,mem_unused:%i,swap_in:%i,swap_out:%i,swap_total:%i,swap_usage:%i," \
+                   "major_fault:%i,minor_fault:%i,user:%i,nice:%i,system:%i,idle:%i,iowait:%i,irq:%i,softirq:%i,steal:%i,total:%i" % \
                    (data['mem_available'], data['mem_free'], data['swap_in'], \
-                    data['swap_out'], majflt, minflt)
+                    data['swap_out'], data['swap_total'], data['swap_usage'], majflt, minflt, \
+                    user, nice, system, idle, iowait, irq, softirq, steal, total)
         sock_send(conn, response)
+        if stat is not None:
+            stat.close()
 
     def session(self, conn, addr):
         self.logger.debug("Connection received from %s", addr)

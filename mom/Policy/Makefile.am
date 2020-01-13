@@ -23,6 +23,9 @@ momdir = $(pkgpythondir)/Policy
 mom_PYTHON = \
 	Parser.py \
 	Policy.py \
+	WFMPolicy.py \
+	FUPolicy.py \
+	RPPolicy.py \
 	__init__.py \
 	spark.py \
 	$(NULL)

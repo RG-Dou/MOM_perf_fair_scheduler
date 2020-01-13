@@ -11,6 +11,7 @@ from mom.PolicyEngine import PolicyEngine
 from mom.RPCServer import RPCServer, enable_i8
 from mom.MOMFuncs import MOMFuncs, EXPORTED_ATTRIBUTE
 
+# Modified by DRG
 class MOM:
     def __init__(self, conf_file, conf_overrides=None):
         self._load_config(conf_file, conf_overrides)
@@ -91,6 +92,18 @@ class MOM:
         self.config.set('main', 'controllers', 'Balloon')
         self.config.set('main', 'plot-dir', '')
         self.config.set('main', 'rpc-port', '-1')
+
+        # If "policy-type" = customized, user need to offer one policy file.
+        # Other types include "wfm-instant", "wfm-longterm", "fupolicy"
+        # Modified by DRG
+        self.config.set('main', 'policy-type', 'customized')
+        self.config.set('main', 'total-mem', '1.0')
+        self.config.set('main', 'name-to-user-weights', '')
+        self.config.set('main', 'name-to-vm-weights', '')
+        self.config.set('main', 'name-to-user', '')
+        self.config.set('main', 'name-to-slope', '')
+        self.config.set('main', 'alpha', '1.0')
+        self.config.set('main', 'beta', '1.0')
         self.config.set('main', 'policy', '')
         self.config.set('main', 'policy-dir', '')
         self.config.set('main', 'guest-manager-multi-thread', 'true')
@@ -128,7 +141,14 @@ class MOM:
     def _validate_config(self):
         policy = self.config.get('main', 'policy')
         policy_dir = self.config.get('main', 'policy-dir')
-        if policy and policy_dir:
+
+        # Modified by DRG
+        policy_type = self.config.get('main', 'policy-type')
+        if policy_type != 'customized' and policy_type != 'wfm-instant' and policy_type != 'wfm-longterm' and policy_type != 'rppolicy':
+            self.logger.error("No such policy type")
+            return False
+
+        if policy_type == "customized" and policy and policy_dir:
             self.logger.error("Only one of 'policy' and 'policy-dir' may be"
                                "specified")
             return False

@@ -21,27 +21,27 @@ NAME=$1
 # of local IP addresses
 # NUM=${NAME##*-}
 #IP="192.168.123.$[ $NUM + 1 ]"
-IP="192.168.122.111"
+USER=100
 # echo $IP
 if test "$NAME" = "ubuntu01"
 then
-        IP="192.168.122.120"
+        USER="user1"
 fi
 
 if test "$NAME" = "ubuntu02"
 then
-        IP="192.168.122.201"
+        USER="user1"
 fi
 
 if test "$NAME" = "ubuntu03"
 then
-        IP="192.168.122.111"
+        USER="user1"
 fi
 
 if test "$NAME" = "ubuntu04"
 then
-        IP="192.168.122.176"
+        USER="user2"
 fi
 
-echo $IP
+echo $USER
 

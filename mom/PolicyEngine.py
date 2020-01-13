@@ -19,7 +19,11 @@ import time
 import logging
 import os
 from Policy.Policy import Policy, PolicyError
+from Policy.WFMPolicy import WFMPolicy
+from Policy.FUPolicy import FUPolicy
+from Policy.RPPolicy import RPPolicy
 
+# Modified by DRG
 class PolicyEngine(threading.Thread):
     """
     At a regular interval, this thread triggers system reconfiguration by
@@ -37,8 +41,26 @@ class PolicyEngine(threading.Thread):
             'guest_manager': guest_manager,
         }
 
-        self.policy = Policy()
-        self.load_policy()
+        # Modified by DRG
+        policy_type = self.config.get('main', 'policy-type')
+        # vmpres_threshold = self.config.get('main', 'vmpres_threshold')
+        # hostpres_threshold = self.config.get('main', 'hostpres_threshold')
+        total_mem = self.config.get('main', 'total-mem')
+        plot_dir = config.get('__int__', 'plot-subdir')
+        if policy_type == "customized":
+            self.policy = Policy()
+            self.load_policy()
+        elif policy_type == 'wfm-instant' or policy_type == 'wfm-longterm':  
+            self.policy = WFMPolicy()
+            self.policy.set_policy(total_mem, plot_dir)
+        elif policy_type == 'fupolicy':
+            self.policy = FUPolicy()
+        elif policy_type == 'rppolicy':
+            alpha = float(self.config.get('main', 'alpha'))
+            beta = float(self.config.get('main', 'beta'))
+            self.policy = RPPolicy()
+            self.policy.set_policy(policy_type, total_mem, plot_dir, alpha, beta)
+            #self.policy.set_policy(policy_type, total_mem, plot_dir)
         self.start()
 
     def load_policy(self):

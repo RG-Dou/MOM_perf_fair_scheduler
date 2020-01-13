@@ -16,6 +16,7 @@
 
 import threading
 import ConfigParser
+from subprocess import *
 import time
 import re
 import logging
@@ -36,6 +37,12 @@ class GuestMonitor(Monitor):
         self.data_sem.acquire()
         self.properties.update(info)
         self.properties['hypervisor_iface'] = hypervisor_iface
+        # Modified by DRG
+        self.properties['userID'] = self.get_guest_userid(config, info['name'])
+        self.properties['weight-user'] = self.get_user_weight(config, self.properties['userID'])
+        self.properties['weight-vm'] = self.get_guest_weight(config, info['name'])
+        self.properties['slope'] = self.get_guest_slope(config, info['name'])
+
         self.data_sem.release()
 
         collector_list = self.config.get('guest', 'collectors')
@@ -50,6 +57,126 @@ class GuestMonitor(Monitor):
         interface.
         """
         return self.properties.get('name')
+
+
+    """
+    Modified by DRG
+    """
+    def get_guest_userid(self, config, name):
+        """
+        There is no simple, standardized way to determine a guest's weight.
+        We side-step the problem and make use of a helper program if specified.
+
+        XXX: This is a security hole!  We are running a user-specified command!
+        """
+        try:
+            prog = self.config.get('main', 'name-to-user')
+        except KeyError:
+            return 0
+        try:
+            output = Popen([prog, name], stdout=PIPE).communicate()[0]
+            return output[:-1]
+        except OSError, (errno, strerror):
+            self.logger.warn("Cannot call name-to-user: %s", strerror)
+            return None
+
+
+    """
+    Modified by DRG
+    """
+    def get_user_weight(self, config, name):
+        """
+        There is no simple, standardized way to determine a guest's weight.
+        We side-step the problem and make use of a helper program if specified.
+
+        XXX: This is a security hole!  We are running a user-specified command!
+        """
+        try:
+            prog = self.config.get('main', 'name-to-user-weights')
+        except KeyError:
+            return 0
+        try:
+            output = Popen([prog, name], stdout=PIPE).communicate()[0]
+        except OSError, (errno, strerror):
+            self.logger.warn("Cannot call name-to-user-weights: %s", strerror)
+            return None
+        try:
+            weight = int(output)
+            if weight <= 0:
+                self.logger.warn("Output from name-to-user-weights %s is not positive" \
+                             "weight. (output = '%s')", name, output)
+                return 0
+            else:
+                return weight
+        except ValueError:
+                self.logger.warn("Output from name-to-user-weights %s is not a number" \
+                             "weight. (output = '%s')", name, output)
+                return 0
+
+
+    """
+    Modified by DRG
+    """
+    def get_guest_weight(self, config, name):
+        """
+        There is no simple, standardized way to determine a guest's weight.
+        We side-step the problem and make use of a helper program if specified.
+
+        XXX: This is a security hole!  We are running a user-specified command!
+        """
+        try:
+            prog = self.config.get('main', 'name-to-vm-weights')
+        except KeyError:
+            return 0
+        try:
+            output = Popen([prog, name], stdout=PIPE).communicate()[0]
+        except OSError, (errno, strerror):
+            self.logger.warn("Cannot call name-to-vm-weights: %s", strerror)
+            return None
+        try:
+            weight = int(output)
+            if weight <= 0:
+                self.logger.warn("Output from name-to-vm-weights %s is not positive" \
+                             "weight. (output = '%s')", name, output)
+                return 0
+            else:
+                return weight
+        except ValueError:
+                self.logger.warn("Output from name-to-vm-weights %s is not a number" \
+                             "weight. (output = '%s')", name, output)
+                return 0
+
+    """
+    Modified by DRG
+    """
+    def get_guest_slope(self, config, name):
+        """
+        There is no simple, standardized way to determine a guest's weight.
+        We side-step the problem and make use of a helper program if specified.
+
+        XXX: This is a security hole!  We are running a user-specified command!
+        """
+        try:
+            prog = self.config.get('main', 'name-to-slope')
+        except KeyError:
+            return 0
+        try:
+            output = Popen([prog, name], stdout=PIPE).communicate()[0]
+        except OSError, (errno, strerror):
+            self.logger.warn("Cannot call name-to-slope: %s", strerror)
+            return None
+        try:
+            slope = float(output)
+            if slope <= 0:
+                self.logger.warn("Output from name-to-slope %s is not positive" \
+                             "slope. (output = '%s')", name, output)
+                return 0
+            else:
+                return slope
+        except ValueError:
+                self.logger.warn("Output from name-to-slope %s is not a number" \
+                             "slope. (output = '%s')", name, output)
+                return 0
 
 
 class GuestMonitorThread(threading.Thread):

@@ -1,0 +1,200 @@
+2019-04-23 15:10:34,172 - mom - INFO - MOM starting
+2019-04-23 15:10:34,174 - mom.HostMonitor - INFO - Host Monitor starting
+2019-04-23 15:10:34,174 - mom - INFO - hypervisor interface libvirt
+2019-04-23 15:10:34,890 - mom.HostMonitor - INFO - HostMonitor is ready
+2019-04-23 15:10:34,930 - mom.GuestManager - INFO - Guest Manager starting: multi-thread
+2019-04-23 15:10:34,931 - mom.PolicyEngine - INFO - Policy Engine starting
+2019-04-23 15:10:34,933 - mom.RPCServer - INFO - RPC Server is disabled
+2019-04-23 15:10:35,156 - mom.GuestMonitor.Thread - INFO - GuestMonitor-ubuntu02 starting
+2019-04-23 15:10:35,196 - mom.Monitor - INFO - ubuntu02 is ready
+2019-04-23 15:10:35,222 - mom.GuestMonitor.Thread - INFO - GuestMonitor-ubuntu03 starting
+2019-04-23 15:10:35,228 - mom.Monitor - INFO - ubuntu03 is ready
+2019-04-23 15:10:36,936 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 672000, swap size: 0, workset: 672000
+2019-04-23 15:10:36,937 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 664104, swap size: 0, workset: 664104
+2019-04-23 15:10:36,937 - mom.RPPolicy - INFO - predictors is {'user1\n': 672000L, 'user2\n': 664104L}
+2019-04-23 15:10:38,938 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 672952, swap size: 0, workset: 672952
+2019-04-23 15:10:38,939 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 664104, swap size: 0, workset: 664104
+2019-04-23 15:10:38,939 - mom.RPPolicy - INFO - predictors is {'user1\n': 672833.0, 'user2\n': 664104.0}
+2019-04-23 15:10:40,942 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 700520, swap size: 0, workset: 700520
+2019-04-23 15:10:40,942 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 673412, swap size: 0, workset: 673412
+2019-04-23 15:10:40,942 - mom.RPPolicy - INFO - predictors is {'user1\n': 697059.125, 'user2\n': 672248.5}
+2019-04-23 15:10:42,945 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 724336, swap size: 0, workset: 724336
+2019-04-23 15:10:42,945 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 702204, swap size: 0, workset: 702204
+2019-04-23 15:10:42,945 - mom.RPPolicy - INFO - predictors is {'user1\n': 720926.390625, 'user2\n': 698459.5625}
+2019-04-23 15:10:44,946 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 804032, swap size: 0, workset: 804032
+2019-04-23 15:10:44,947 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 771320, swap size: 0, workset: 771320
+2019-04-23 15:10:44,947 - mom.RPPolicy - INFO - predictors is {'user1\n': 793643.798828125, 'user2\n': 762212.4453125}
+2019-04-23 15:10:46,949 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 882380, swap size: 0, workset: 882380
+2019-04-23 15:10:46,950 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 846040, swap size: 0, workset: 846040
+2019-04-23 15:10:46,950 - mom.RPPolicy - INFO - predictors is {'user1\n': 871287.9748535156, 'user2\n': 835561.5556640625}
+2019-04-23 15:10:48,953 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 919444, swap size: 0, workset: 919444
+2019-04-23 15:10:48,953 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 890568, swap size: 0, workset: 890568
+2019-04-23 15:10:48,953 - mom.RPPolicy - INFO - predictors is {'user1\n': 913424.4968566895, 'user2\n': 883692.1944580078}
+2019-04-23 15:10:50,956 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 967536, swap size: 0, workset: 967536
+2019-04-23 15:10:50,956 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 931436, swap size: 0, workset: 931436
+2019-04-23 15:10:50,957 - mom.RPPolicy - INFO - predictors is {'user1\n': 960772.0621070862, 'user2\n': 925468.024307251}
+2019-04-23 15:10:52,959 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1013620, swap size: 0, workset: 1013620
+2019-04-23 15:10:52,960 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 957632, swap size: 0, workset: 957632
+2019-04-23 15:10:52,960 - mom.RPPolicy - INFO - predictors is {'user1\n': 1007014.0077633858, 'user2\n': 953611.5030384064}
+2019-04-23 15:10:54,962 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1057396, swap size: 0, workset: 1057396
+2019-04-23 15:10:54,963 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1014956, swap size: 0, workset: 1014956
+2019-04-23 15:10:54,963 - mom.RPPolicy - INFO - predictors is {'user1\n': 1051098.2509704232, 'user2\n': 1007287.9378798008}
+2019-04-23 15:10:56,965 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1110100, swap size: 0, workset: 1110100
+2019-04-23 15:10:56,965 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1056932, swap size: 0, workset: 1056932
+2019-04-23 15:10:56,965 - mom.RPPolicy - INFO - predictors is {'user1\n': 1102724.781371303, 'user2\n': 1050726.492234975}
+2019-04-23 15:10:58,968 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1151240, swap size: 0, workset: 1151240
+2019-04-23 15:10:58,968 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1117308, swap size: 0, workset: 1117308
+2019-04-23 15:10:58,968 - mom.RPPolicy - INFO - predictors is {'user1\n': 1145175.5976714129, 'user2\n': 1108985.311529372}
+2019-04-23 15:11:00,971 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1208756, swap size: 0, workset: 1208756
+2019-04-23 15:11:00,971 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1163076, swap size: 0, workset: 1163076
+2019-04-23 15:11:00,972 - mom.RPPolicy - INFO - predictors is {'user1\n': 1200808.4497089265, 'user2\n': 1156314.6639411715}
+2019-04-23 15:11:02,974 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1246440, swap size: 0, workset: 1246440
+2019-04-23 15:11:02,974 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1215276, swap size: 0, workset: 1215276
+2019-04-23 15:11:02,974 - mom.RPPolicy - INFO - predictors is {'user1\n': 1240736.056213616, 'user2\n': 1207905.8329926464}
+2019-04-23 15:11:04,977 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1277876, swap size: 0, workset: 1277876
+2019-04-23 15:11:04,977 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1259524, swap size: 0, workset: 1259524
+2019-04-23 15:11:04,977 - mom.RPPolicy - INFO - predictors is {'user1\n': 1273233.507026702, 'user2\n': 1253071.7291240809}
+2019-04-23 15:11:06,979 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1300500, swap size: 0, workset: 1300500
+2019-04-23 15:11:06,988 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1281736, swap size: 0, workset: 1281736
+2019-04-23 15:11:06,988 - mom.RPPolicy - INFO - predictors is {'user1\n': 1297091.6883783378, 'user2\n': 1278152.96614051}
+2019-04-23 15:11:08,991 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1337880, swap size: 0, workset: 1337880
+2019-04-23 15:11:08,991 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1327008, swap size: 0, workset: 1327008
+2019-04-23 15:11:08,991 - mom.RPPolicy - INFO - predictors is {'user1\n': 1332781.4610472922, 'user2\n': 1320901.1207675638}
+2019-04-23 15:11:10,994 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1378192, swap size: 0, workset: 1378192
+2019-04-23 15:11:11,009 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1362436, swap size: 0, workset: 1362436
+2019-04-23 15:11:11,009 - mom.RPPolicy - INFO - predictors is {'user1\n': 1372515.6826309115, 'user2\n': 1357244.1400959454}
+2019-04-23 15:11:13,012 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1411000, swap size: 0, workset: 1411000
+2019-04-23 15:11:13,012 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1398352, swap size: 0, workset: 1398352
+2019-04-23 15:11:13,013 - mom.RPPolicy - INFO - predictors is {'user1\n': 1406189.460328864, 'user2\n': 1393213.5175119932}
+2019-04-23 15:11:15,015 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1458324, swap size: 0, workset: 1458324
+2019-04-23 15:11:15,015 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1442568, swap size: 0, workset: 1442568
+2019-04-23 15:11:15,015 - mom.RPPolicy - INFO - predictors is {'user1\n': 1451807.182541108, 'user2\n': 1436398.6896889992}
+2019-04-23 15:11:15,016 - mom.RPPolicy - INFO - user_allocate is {'user1\n': 1412231.7999999998, 'user2\n': 1412231.7999999998}
+2019-04-23 15:11:15,016 - mom.RPPolicy - INFO - vm_allocate is {'ubuntu03': 1412231.7999999998, 'ubuntu02': 1412231.7999999998}
+2019-04-23 15:11:15,016 - mom.Algorithm - INFO - update info: 
+total allocated per vm: {'ubuntu03': 1412231.7999999998, 'ubuntu02': 1412231.7999999998}, 
+total allocated per user: {'user1\n': 1412231.7999999998, 'user2\n': 1412231.7999999998}, 
+total workset: {'ubuntu03': 1442568L, 'ubuntu02': 1458324L}
+2019-04-23 15:11:15,016 - mom.Controllers.Balloon - INFO - Ballooning guest:ubuntu02 from 4194304 to 1412231
+2019-04-23 15:11:15,018 - mom.Controllers.Balloon - INFO - Ballooning guest:ubuntu03 from 4194304 to 1412231
+2019-04-23 15:11:17,022 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 24668, swap size: 0, workset: 24668
+2019-04-23 15:11:17,023 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 20696, swap size: 0, workset: 20696
+2019-04-23 15:11:17,023 - mom.RPPolicy - INFO - predictors is {'user1\n': 203060.3978176385, 'user2\n': 197658.8362111249}
+2019-04-23 15:11:19,025 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1304668, swap size: 0, workset: 1304668
+2019-04-23 15:11:19,026 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1307932, swap size: 0, workset: 1307932
+2019-04-23 15:11:19,026 - mom.RPPolicy - INFO - predictors is {'user1\n': 1166967.0497272047, 'user2\n': 1169147.8545263906}
+2019-04-23 15:11:21,028 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1308296, swap size: 0, workset: 1308296
+2019-04-23 15:11:21,167 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1305912, swap size: 0, workset: 1305912
+2019-04-23 15:11:21,167 - mom.RPPolicy - INFO - predictors is {'user1\n': 1290629.8812159006, 'user2\n': 1288816.481815799}
+2019-04-23 15:11:23,170 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1306636, swap size: 0, workset: 1306636
+2019-04-23 15:11:23,170 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1306660, swap size: 0, workset: 1306660
+2019-04-23 15:11:23,171 - mom.RPPolicy - INFO - predictors is {'user1\n': 1304635.2351519875, 'user2\n': 1304429.5602269748}
+2019-04-23 15:11:25,173 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1304260, swap size: 0, workset: 1304260
+2019-04-23 15:11:25,174 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1306888, swap size: 0, workset: 1306888
+2019-04-23 15:11:25,174 - mom.RPPolicy - INFO - predictors is {'user1\n': 1304306.9043939984, 'user2\n': 1306580.6950283719}
+2019-04-23 15:11:27,177 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1308128, swap size: 0, workset: 1308128
+2019-04-23 15:11:27,177 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1307104, swap size: 0, workset: 1307104
+2019-04-23 15:11:27,177 - mom.RPPolicy - INFO - predictors is {'user1\n': 1307650.3630492499, 'user2\n': 1307038.5868785465}
+2019-04-23 15:11:29,181 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1302612, swap size: 0, workset: 1302612
+2019-04-23 15:11:29,181 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1306900, swap size: 0, workset: 1306900
+2019-04-23 15:11:29,181 - mom.RPPolicy - INFO - predictors is {'user1\n': 1303241.7953811563, 'user2\n': 1306917.3233598182}
+2019-04-23 15:11:31,184 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1301112, swap size: 0, workset: 1301112
+2019-04-23 15:11:31,184 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1295852, swap size: 0, workset: 1295852
+2019-04-23 15:11:31,184 - mom.RPPolicy - INFO - predictors is {'user1\n': 1301378.2244226446, 'user2\n': 1297235.1654199772}
+2019-04-23 15:11:33,187 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1303192, swap size: 0, workset: 1303192
+2019-04-23 15:11:33,187 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1307836, swap size: 0, workset: 1307836
+2019-04-23 15:11:33,188 - mom.RPPolicy - INFO - predictors is {'user1\n': 1302965.2780528306, 'user2\n': 1306510.8956774971}
+2019-04-23 15:11:35,191 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1304456, swap size: 0, workset: 1304456
+2019-04-23 15:11:35,191 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1306312, swap size: 0, workset: 1306312
+2019-04-23 15:11:35,191 - mom.RPPolicy - INFO - predictors is {'user1\n': 1304269.6597566039, 'user2\n': 1306336.8619596872}
+2019-04-23 15:11:37,194 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1292072, swap size: 0, workset: 1292072
+2019-04-23 15:11:37,195 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1306436, swap size: 0, workset: 1306436
+2019-04-23 15:11:37,195 - mom.RPPolicy - INFO - predictors is {'user1\n': 1293596.7074695756, 'user2\n': 1306423.6077449608}
+2019-04-23 15:11:39,198 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1292040, swap size: 0, workset: 1292040
+2019-04-23 15:11:39,198 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1306404, swap size: 0, workset: 1306404
+2019-04-23 15:11:39,198 - mom.RPPolicy - INFO - predictors is {'user1\n': 1292234.588433697, 'user2\n': 1306406.45096812}
+2019-04-23 15:11:40,763 - mom.Monitor - WARNING - ubuntu02: Collection error: Network communication to ubuntu02 failed: Unable to receive on socket
+2019-04-23 15:11:41,201 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1292072, swap size: 0, workset: 1292072
+2019-04-23 15:11:41,202 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1306436, swap size: 0, workset: 1306436
+2019-04-23 15:11:41,202 - mom.RPPolicy - INFO - predictors is {'user1\n': 1292092.3235542122, 'user2\n': 1306432.306371015}
+2019-04-23 15:11:41,789 - mom.Monitor - WARNING - ubuntu03: Collection error: Network communication to ubuntu03 failed: Unable to receive on socket
+2019-04-23 15:11:41,790 - mom.Monitor - WARNING - ubuntu02: Collection error: Network connection to ubuntu02 failed: [Errno 111] Connection refused
+2019-04-23 15:11:42,813 - mom.Monitor - WARNING - ubuntu02: Collection error: Network connection to ubuntu02 failed: [Errno 111] Connection refused
+2019-04-23 15:11:42,814 - mom.Monitor - WARNING - ubuntu03: Collection error: Network connection to ubuntu03 failed: [Errno 111] Connection refused
+2019-04-23 15:11:43,205 - mom.RPPolicy - INFO - basic info: (ubuntu02, user1
+) active memory: 1284832, swap size: 0, workset: 1284832
+2019-04-23 15:11:43,205 - mom.RPPolicy - INFO - basic info: (ubuntu03, user2
+) active memory: 1299320, swap size: 0, workset: 1299320
+2019-04-23 15:11:43,205 - mom.RPPolicy - INFO - predictors is {'user1\n': 1285739.5404442765, 'user2\n': 1300209.0382963768}
+2019-04-23 15:11:43,206 - mom.PolicyEngine - INFO - Policy Engine ending
+2019-04-23 15:11:43,322 - mom.GuestManager - INFO - Guest Manager ending
+2019-04-23 15:11:43,815 - mom.GuestMonitor.Thread - INFO - GuestMonitor-ubuntu02 ending
+2019-04-23 15:11:43,815 - mom.GuestMonitor.Thread - INFO - GuestMonitor-ubuntu03 ending
+2019-04-23 15:11:44,070 - mom.HostMonitor - INFO - Host Monitor ending
+2019-04-23 15:11:44,089 - mom - INFO - MOM ending
