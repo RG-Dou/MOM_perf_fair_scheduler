@@ -162,6 +162,7 @@ class GradientPolicy:
 
 
 	def warm_up(self, total_mem):
+		print("Warm_up")
 		if self.count < WARMUP_COUNT:
 			self.count += 1
 			share = total_mem / len(self.VM_Infos)
