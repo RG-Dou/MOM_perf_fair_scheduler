@@ -164,10 +164,13 @@ class GradientPolicy:
 
 	def warm_up(self, total_mem):
 		if self.count < WARMUP_COUNT:
+			self.count += 1
 			share = total_mem / len(self.VM_Infos)
 			for name, info in self.VM_Infos.iteritems():
 				info.setAttribute('Allocated', share)
 				info.setBalloon()
+			return True
+		return True
 
 
 	def evaluate(self, host, guest_list):
@@ -178,7 +181,8 @@ class GradientPolicy:
 		self.init_update_infos(guest_list)
 
 		# equal the total mem to all VMs
-		self.warm_up(total_mem)
+		if self.warm_up(total_mem):
+			return
 
 		busy_vm, idle_vm = self.divide_group()
 
@@ -191,6 +195,8 @@ class GradientPolicy:
 		else:
 			self.logger.info("All VMs are idle")
 
+		print("Givers: " + self.givers)
+		print("Takers: " + self.takers)
 		self.trigger_balloon(self.givers)
 		self.trigger_balloon(self.takers)
 
