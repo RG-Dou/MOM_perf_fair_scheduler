@@ -31,6 +31,7 @@ AVE_LEN = 40
 WINDOW = 40
 
 # RPPolicy_1.0.1
+# the final version of performance fairness policy
 class RPPolicy:
 	def __init__(self):
 		self.logger = logging.getLogger('mom.RPPolicy')
@@ -40,7 +41,7 @@ class RPPolicy:
 							'Balloon', 'User', 'Start-time', 
 							'IOwait', 'Softirq', 'System',
 							'Total', 'Speed', 'Rate', 'Allocated', 
-							'Pagefault'])
+							'Pagefault', 'Fairness'])
 		self.fit_fields = set(['users', 'standard_users', 'ave_users',
 							'pfs', 'ave_pfs', 'ins_speed'])
 		self.VM_Infos = {}
@@ -48,6 +49,11 @@ class RPPolicy:
 		self.givers = {}
 		self.takers = {}
 
+		self.last_fair = 0.0
+		self.num_fair = 0
+		self.message_file = "/data/drg_data/work1/scheduler/main/doc/message"
+		with open(self.message_file, 'w'):
+			pass
 
 	def set_policy(self, type, total_mem, plot_dir, alpha, beta):
 		self.type = type
@@ -70,12 +76,45 @@ class RPPolicy:
 			info.setBalloon()
 
 
+	def update_message(self, fairness):
+		fair_round = round(fairness, 3)
+		if fair_round  == self.last_fair:
+			self.num_fair += 1
+			if self.num_fair >= 20:
+				with open(self.message_file, 'w') as file:
+					file.write("completed")
+
+		else:
+			self.last_fair = fair_round
+			self.num_fair = 0
+
+
 	def dynamic_allocate(self):
 		ranks = {}
+		names, performances, weights = [], [], []
+		J_index1, J_index2 = 0, 0
 		for name, info in self.VM_Infos.iteritems():
 			rate = info.getAttribute('Rate')
 			if rate > 0:
 				ranks[info] = rate
+			else:
+				self.logger.info("The %s has error on rate: performance is %s; weight is %s", name, info.getAttribute('Speed'), info.getAttribute('Weight'))
+				return
+
+			names.append(name)
+			performances.append(info.getAttribute('Speed'))
+			weights.append(info.getAttribute('Weight'))
+			J_index1 += rate
+			J_index2 += rate * rate
+
+		fairness = J_index1 * J_index1 / (len(names) * J_index2)
+		for name, info in self.VM_Infos.iteritems():
+			info.setAttribute('Fairness', fairness)
+
+		self.update_message(fairness)
+
+		self.logger.info("Current Fairness is %s.", fairness)
+		self.logger.info("VMs: %s, Weights:%s, Performances: %s", names, weights, performances)
 
 		rank_l = sorted(ranks.items(), lambda x, y: cmp(x[1], y[1]))
 
@@ -127,6 +166,7 @@ class RPPolicy:
 			if info.getAttribute('Free') < Max_free:
 				busy.append(info)
 			else:
+				self.logger.info("%s is idle, free memory is %s.", name, info.getAttribute('Free'))
 				idle.append(info)
 		return busy,idle
 
@@ -142,7 +182,7 @@ class RPPolicy:
 		for name, info in self.VM_Infos.iteritems():
 			total += info.getAttribute('Allocated')
 
-		self.logger.info("Total Allocated: %s, Distance : %s", total, total - total_mem)
+		# self.logger.info("Total Allocated: %s, Distance : %s", total, total - total_mem)
 
 
 	def evaluate(self, host, guest_list):
@@ -172,9 +212,13 @@ class RPPolicy:
 		busy_vm, idle_vm = self.seperate()
 
 		if len(idle_vm) == 0:
+			self.logger.info("No idle VMs, do performance fairness")
 			self.dynamic_allocate()
 		elif len(busy_vm) > 0:
+			self.logger.info("There are some idle VMs, do utilization improvement")
 			self.meanByFree()
+		else:
+			self.logger.info("All VMs are idle")
 
 		self.check(total_mem)
 
@@ -199,7 +243,7 @@ class VM_Info:
 						 'Allocated', 'Worksize', 'User', 'Total',
 						 'Start-time', 'Rate', 'VM', 'Estimated',
 						 'IOwait', 'Softirq', 'System',
-						 'Start-user', 'Pagefault'])
+						 'Start-user', 'Pagefault', 'Fairness'])
 		self.setAttribute('VM', name)
 		self.fitting = Fitting(name, alpha, beta)
 
@@ -245,7 +289,7 @@ class VM_Info:
 
 
 	def initAttribute(self, guest):
-		self.setAttribute('Min', 900000)
+		self.setAttribute('Min', 1100000)
 		self.setAttribute('Configured', guest.balloon_max)
 		self.setAttribute('Weight', guest.Prop('weight-vm'))
 		self.setAttribute('Allocated', 0)
@@ -255,6 +299,7 @@ class VM_Info:
 		self.setAttribute('User', guest.user)
 		self.setAttribute('Pagefault', guest.major_fault)
 		self.setAttribute('Rate', 0)
+		self.setAttribute('Fairness', 0)
 		self.update(guest)
 
 
@@ -370,6 +415,7 @@ class Fitting:
 		# self.logger.info("average page fault:%s", self.attributes['ave_pfs'])
 		# self.logger.info("instant speed:%s", self.attributes['ins_speed'])
 		if len(self.attributes['ave_users']) < WINDOW:
+			self.logger.info("The number of data [%s] is not enough %s", len(self.attributes['ave_users']), WINDOW)
 			return None
 		else:
 			standard = self.estimated()
@@ -407,12 +453,13 @@ class Fitting:
 
 
 	def appendStandard(self, standard, index):
+		self.logger.info("VM: %s; ideal progress: %s; real progress: %s; epoch: %s", self.name, standard, self.attributes['users'][index], Epoch)
 		if standard < self.attributes['users'][index]:
 			standard = self.attributes['users'][index]
 		# elif self.attributes['pfs'][index] < 100:
 		# 	standard = self.attributes['users'][index]
-		if standard > Epoch:
-			standard = Epoch
+		# if standard > Epoch:
+		# 	standard = Epoch
 
 		self.attributes['standard_users'] = np.append(self.attributes['standard_users'], [standard])
 		speed = 1

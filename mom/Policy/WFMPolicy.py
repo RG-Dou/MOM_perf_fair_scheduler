@@ -27,6 +27,7 @@ DEFAULT_POLICY_NAME = "50_main_"
 
 MinLoc = 900000
 
+# Long-term Resource Fairness
 class WFMPolicy:
 	def __init__(self):
 		self.logger = logging.getLogger('mom.Policy')

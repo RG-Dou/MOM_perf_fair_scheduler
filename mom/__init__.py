@@ -144,7 +144,7 @@ class MOM:
 
         # Modified by DRG
         policy_type = self.config.get('main', 'policy-type')
-        if policy_type != 'customized' and policy_type != 'wfm-instant' and policy_type != 'wfm-longterm' and policy_type != 'rppolicy':
+        if policy_type != 'customized' and policy_type != 'wfm-instant' and policy_type != 'wfm-longterm' and policy_type != 'rppolicy' and policy_type != 'blank':
             self.logger.error("No such policy type")
             return False
 

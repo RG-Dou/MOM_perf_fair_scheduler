@@ -22,8 +22,12 @@ from Policy.Policy import Policy, PolicyError
 from Policy.WFMPolicy import WFMPolicy
 from Policy.FUPolicy import FUPolicy
 from Policy.RPPolicy import RPPolicy
+from Policy.BlankPolicy import BlankPolicy
 
 # Modified by DRG
+from mom.Policy.GradientPolicy import GradientPolicy
+
+
 class PolicyEngine(threading.Thread):
     """
     At a regular interval, this thread triggers system reconfiguration by
@@ -61,6 +65,18 @@ class PolicyEngine(threading.Thread):
             self.policy = RPPolicy()
             self.policy.set_policy(policy_type, total_mem, plot_dir, alpha, beta)
             #self.policy.set_policy(policy_type, total_mem, plot_dir)
+        elif policy_type == 'blank':
+            alpha = float(self.config.get('main', 'alpha'))
+            beta = float(self.config.get('main', 'beta'))
+            self.policy = BlankPolicy()
+            self.policy.set_policy(policy_type, total_mem, plot_dir, alpha, beta)
+        elif policy_type == 'Gradient':
+            alpha = float(self.config.get('main', 'alpha'))
+            beta = float(self.config.get('main', 'beta'))
+            self.policy = GradientPolicy()
+            self.policy.set_policy(policy_type, total_mem, plot_dir, alpha, beta)
+
+
         self.start()
 
     def load_policy(self):

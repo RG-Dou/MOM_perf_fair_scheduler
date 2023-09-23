@@ -30,24 +30,24 @@ Epoch = 100
 AVE_LEN = 40
 WINDOW = 40
 
-# RPPolicy_1.0.0
-class RPPolicy:
+# RPPolicy_1.0.1
+# the final version of performance fairness policy
+class BlankPolicy:
 	def __init__(self):
 		self.logger = logging.getLogger('mom.RPPolicy')
 		self.policy_sem = threading.Semaphore()
 		self.start = True
-		self.fields = set(['VM', 'Used', 'Swap', 'Worksize', 
-							'Balloon', 'User', 'Start-time', 
+		self.fields = set(['VM', 'Used', 'Swap', 'Worksize',
+							'Balloon', 'User', 'Start-time',
 							'IOwait', 'Softirq', 'System',
-							'Total', 'Speed', 'Rate', 'Allocated', 
-							'Pagefault'])
+							'Total', 'Speed', 'Rate', 'Allocated',
+							'Pagefault', 'Fairness'])
 		self.fit_fields = set(['users', 'standard_users', 'ave_users',
 							'pfs', 'ave_pfs', 'ins_speed'])
 		self.VM_Infos = {}
-		self.pre_even = {}
-		self.pre_odd = {}
 		self.count = 0
-		self.pre_state = 0
+		self.givers = {}
+		self.takers = {}
 
 
 	def set_policy(self, type, total_mem, plot_dir, alpha, beta):
@@ -63,127 +63,9 @@ class RPPolicy:
 			self.plotter = None
 
 
-	def firstTime(self, total_mem):
-		num = len(self.VM_Infos)
-		share = total_mem / num
-		for name, info in self.VM_Infos.iteritems():
-			info.setAttribute('Allocated', share)
-			info.setBalloon()
-
-
-	def pre_allocate(self, total_mem):
-		if len(self.pre_even) == 0:
-			return
-		min_mem = self.VM_Infos.values()[0].getAttribute('Min')
-		#share_odd = (total_mem - min_mem)*4/(WINDOW + AVE_LEN)
-		share_odd = Min_share
-		share_even = -(share_odd * len(self.pre_odd)/len(self.pre_even))
-		self.logger.info("total_mem: %s, min_mem: %s, share_odd: %s, share_even: %s", total_mem, min_mem, share_odd, share_even)
-
-
-		if self.pre_state == 0:
-			print(self.pre_even.values()[0].getAttribute('Allocated') + share_even)
-			print(min_mem)
-			if self.pre_odd.values()[0].getAttribute('Allocated') - share_odd < min_mem:
-				self.pre_state = 1
-		else:
-			if self.pre_even.values()[0].getAttribute('Allocated') + share_even < min_mem:
-				self.pre_state = 0
-
-		self.logger.info("count: %s, pre_state: %s", self.count, self.pre_state)
-
-		if self.pre_state == 0:
-			share_odd = -share_odd
-			share_even = -share_even
-
-		for name, info in self.pre_odd.iteritems():
-			info.addAttribute('Allocated', share_odd)
-			info.setBalloon()
-		for name, info in self.pre_even.iteritems():
-			info.addAttribute('Allocated', share_even)
-			info.setBalloon()
-
-
-	def dynamic_allocate(self):
-		ranks = {}
-		for name, info in self.VM_Infos.iteritems():
-			rate = info.getAttribute('Rate')
-			if rate > 0:
-				ranks[info] = rate
-
-		rank_l = sorted(ranks.items(), lambda x, y: cmp(x[1], y[1]))
-
-		max_info = None
-		max_share = 0
-		max_index = 0
-		min_info = None
-		min_share = 0
-		min_index = 0
-		for i in range(0, len(rank_l)):
-			info = rank_l[i][0]
-			if info.dist2high() > 0:
-				min_info = info
-				min_share = info.dist2high()
-				min_index = i
-				break
-
-		for i in range(len(rank_l)-1, -1, -1):
-			info = rank_l[i][0]
-			if info.dist2low() > 0:
-				max_info = info
-				max_share = info.dist2low()
-				max_index = i
-				break
-
-		if min_index >= max_index:
-			return
-		share = min(max_share, min_share, Min_share)
-
-
-		#self.logger.info("Giver:%s, Taker:%s, Share:%s", max_info.name, min_info.name, share)
-		max_info.addAttribute('Allocated', -share)
-		min_info.addAttribute('Allocated', share)
-		for name, info in self.VM_Infos.iteritems():
-			info.setBalloon()
-
-
-	def meanByFree(self, active, inactive):
-		total = 0
-		for info in inactive:
-			share = min(info.getAttribute('Free') - Max_free, \
-				info.getAttribute('Allocated') - info.getAttribute('Min'))
-			if share <= 0:
-				continue
-			info.addAttribute('Allocated', -share)
-			total += share
-		ave_share = total / len(active)
-		for info in active:
-			info.addAttribute('Allocated', ave_share)
-
-		for name, info in self.VM_Infos.iteritems():
-			info.setBalloon()
-
-
-	def check(self):
-		active = []
-		inactive = []
-		for name, info in self.VM_Infos.iteritems():
-			if info.getAttribute('Free') < Max_free:
-				active.append(info)
-			else:
-				inactive.append(info)
-		# self.logger.info("active list:%s", active)
-		# self.logger.info("inactive list:%s", inactive)
-		if len(active) == 0:
-			return False
-		elif len(inactive) == 0:
-			return True
-		else:
-			self.meanByFree(active, inactive)
-			return False
-
-
 	def evaluate(self, host, guest_list):
+
+		self.givers, self.takers = {},{}
 
 		total_mem = host.mem_available * float(self.total_mem_ratio)
 
@@ -196,17 +78,6 @@ class RPPolicy:
 			else:
 				info = self.VM_Infos[name]
 				info.update(guest)
-
-
-		if self.start:
-			self.count += 1
-			self.firstTime(total_mem)
-			if self.count >= AVE_LEN:
-				self.start = False
-			return
-
-		if self.check():
-			self.dynamic_allocate()
 
 		if self.plotter is not None:
 			for name, info in self.VM_Infos.iteritems():
@@ -221,11 +92,11 @@ class VM_Info:
 		self.name = name
 		self.attributes = {}
 		self.keys = set(['Configured', 'Used', 'Free', 'Swap',
-						 'Min', 'Balloon', 'Speed', 'Weight', 
+						 'Min', 'Balloon', 'Speed', 'Weight',
 						 'Allocated', 'Worksize', 'User', 'Total',
 						 'Start-time', 'Rate', 'VM', 'Estimated',
 						 'IOwait', 'Softirq', 'System',
-						 'Start-user', 'Pagefault'])
+						 'Start-user', 'Pagefault', 'Fairness'])
 		self.setAttribute('VM', name)
 		self.fitting = Fitting(name, alpha, beta)
 
@@ -271,7 +142,7 @@ class VM_Info:
 
 
 	def initAttribute(self, guest):
-		self.setAttribute('Min', 900000)
+		self.setAttribute('Min', 1100000)
 		self.setAttribute('Configured', guest.balloon_max)
 		self.setAttribute('Weight', guest.Prop('weight-vm'))
 		self.setAttribute('Allocated', 0)
@@ -281,6 +152,7 @@ class VM_Info:
 		self.setAttribute('User', guest.user)
 		self.setAttribute('Pagefault', guest.major_fault)
 		self.setAttribute('Rate', 0)
+		self.setAttribute('Fairness', 0)
 		self.update(guest)
 
 
@@ -385,7 +257,6 @@ class Fitting:
 		if mean is not None:
 			self.attributes['ave_pfs'] = np.append(self.attributes['ave_pfs'], [mean])
 
-		# self.attributes['time'] = np.append(self.attributes['pfs'], [value3/100])
 		self.attributes['time'] = np.append(self.attributes['time'], [value3/100])
 
 
@@ -397,6 +268,7 @@ class Fitting:
 		# self.logger.info("average page fault:%s", self.attributes['ave_pfs'])
 		# self.logger.info("instant speed:%s", self.attributes['ins_speed'])
 		if len(self.attributes['ave_users']) < WINDOW:
+			self.logger.info("The number of data [%s] is not enough %s", len(self.attributes['ave_users']), WINDOW)
 			return None
 		else:
 			standard = self.estimated()
@@ -425,6 +297,8 @@ class Fitting:
 			y = self.attributes['ave_users']
 			age = self.attributes['time'][-1] - self.attributes['time']
 			weights = self.getWeight(self.attributes['ave_pfs'], age)
+			if np.sum(weights) == 0:
+				weights = weights + 1
 			reg = LinearRegression().fit(x, y, sample_weight = weights)
 			return reg.intercept_
 		else:
@@ -432,12 +306,13 @@ class Fitting:
 
 
 	def appendStandard(self, standard, index):
+		self.logger.info("VM: %s; ideal progress: %s; real progress: %s; epoch: %s", self.name, standard, self.attributes['users'][index], Epoch)
 		if standard < self.attributes['users'][index]:
 			standard = self.attributes['users'][index]
 		# elif self.attributes['pfs'][index] < 100:
 		# 	standard = self.attributes['users'][index]
-		if standard > Epoch:
-			standard = Epoch
+		# if standard > Epoch:
+		# 	standard = Epoch
 
 		self.attributes['standard_users'] = np.append(self.attributes['standard_users'], [standard])
 		speed = 1

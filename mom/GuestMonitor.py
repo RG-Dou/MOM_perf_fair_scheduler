@@ -38,10 +38,10 @@ class GuestMonitor(Monitor):
         self.properties.update(info)
         self.properties['hypervisor_iface'] = hypervisor_iface
         # Modified by DRG
-        self.properties['userID'] = self.get_guest_userid(config, info['name'])
-        self.properties['weight-user'] = self.get_user_weight(config, self.properties['userID'])
+        # self.properties['userID'] = self.get_guest_userid(config, info['name'])
+        # self.properties['weight-user'] = self.get_user_weight(config, self.properties['userID'])
         self.properties['weight-vm'] = self.get_guest_weight(config, info['name'])
-        self.properties['slope'] = self.get_guest_slope(config, info['name'])
+        # self.properties['slope'] = self.get_guest_slope(config, info['name'])
 
         self.data_sem.release()
 
@@ -125,7 +125,7 @@ class GuestMonitor(Monitor):
         XXX: This is a security hole!  We are running a user-specified command!
         """
         try:
-            prog = self.config.get('main', 'name-to-vm-weights')
+            prog = self.config.get('main', 'name-to-weights')
         except KeyError:
             return 0
         try:
