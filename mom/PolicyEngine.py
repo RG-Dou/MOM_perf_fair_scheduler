@@ -70,7 +70,7 @@ class PolicyEngine(threading.Thread):
             beta = float(self.config.get('main', 'beta'))
             self.policy = BlankPolicy()
             self.policy.set_policy(policy_type, total_mem, plot_dir, alpha, beta)
-        elif policy_type == 'Gradient':
+        elif policy_type == 'gradient':
             alpha = float(self.config.get('main', 'alpha'))
             beta = float(self.config.get('main', 'beta'))
             self.policy = GradientPolicy()
