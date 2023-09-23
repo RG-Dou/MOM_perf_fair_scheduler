@@ -46,8 +46,8 @@ class GradientPolicy:
 							'pfs', 'ave_pfs', 'ins_speed'])
 		self.VM_Infos = {}
 		self.count = 0
-		self.givers = {}
-		self.takers = {}
+		self.givers, self.takers = {}, {}
+		self.taker_fair, self.giver_fair = None, None
 
 		self.last_fair = 0.0
 		self.num_fair = 0
@@ -88,7 +88,6 @@ class GradientPolicy:
 		self.print_performance()
 
 		# Update max step for previous receiver and provider
-		self.update_limit2()
 		self.update_step()
 
 		# choose the giver and the taker
@@ -105,7 +104,7 @@ class GradientPolicy:
 
 		if giver is None or taker is None:
 			return
-
+		self.giver_fair, self.taker_fair = giver, taker
 		# final blk
 		final_blk = min(giver.getAttribute('Max-step'), taker.getAttribute('Max-step'), taker.getAttribute('Limit2'), giver.getAttribute('Limit1'))
 		self.givers[giver] = -final_blk
@@ -170,7 +169,7 @@ class GradientPolicy:
 				info.setAttribute('Allocated', share)
 				info.setBalloon()
 			return True
-		return True
+		return False
 
 
 	def evaluate(self, host, guest_list):
@@ -186,6 +185,8 @@ class GradientPolicy:
 
 		busy_vm, idle_vm = self.divide_group()
 
+		# self.update_limit2()
+		self.takers.clear(), self.givers.clear()
 		if len(idle_vm) == 0:
 			self.logger.info("No idle VMs, do performance fairness")
 			self.perf_fair()
@@ -195,8 +196,10 @@ class GradientPolicy:
 		else:
 			self.logger.info("All VMs are idle")
 
-		print("Givers: " + self.givers)
-		print("Takers: " + self.takers)
+		for giver, blk in self.givers.iteritems():
+			print("Giver: " + giver.name + ", blk " + str(blk))
+		for taker, blk in self.takers.iteritems():
+			print("Taker: " + taker.name + ", blk " + str(blk))
 		self.trigger_balloon(self.givers)
 		self.trigger_balloon(self.takers)
 
@@ -223,7 +226,7 @@ class GradientPolicy:
 			sum_a += p_to_w * p_to_w
 			sum_b += p_to_w
 
-		fairness = sum_a * sum_a / (len(self.VM_Infos) * sum_b)
+		fairness = sum_b * sum_b / (len(self.VM_Infos) * sum_a)
 		for name, info in self.VM_Infos.iteritems():
 			# update fairness
 			info.setAttribute('Fairness', fairness)
@@ -232,6 +235,7 @@ class GradientPolicy:
 			p_to_w = info.getAttribute('Rate')
 			w = info.getAttribute('Weight')
 			info.setAttribute('Gradient', self.partial_derivative(sum_a - p_to_w * p_to_w, sum_b - p_to_w, p_to_w, w))
+			print("name: " + name, ", gradient:" + str(info.getAttribute('Gradient')))
 
 		# if the fairness is unchanged last 20 epochs, we think it is finished.
 		self.check_finish(fairness)
@@ -257,13 +261,14 @@ class GradientPolicy:
 
 
 	def update_step(self):
-		for last_giver in self.givers.keys():
-			if last_giver.getAttribute("Gradient") > 0:
-				last_giver.halve_step()
-		for last_taker in self.takers.keys():
-			if last_taker.getAttribute("Gradient") < 0:
-				last_taker.halve_step()
-		self.givers, self.takers = {}, {}
+		if self.giver_fair is not None and self.giver_fair.getAttribute("Gradient") > 0:
+			print("---halve the last giver "+ self.giver_fair.name + ": old step is " + str(self.giver_fair.getAttribute('Max-step')))
+			self.giver_fair.halve_step()
+			print("new step is: " + str(self.giver_fair.getAttribute('Max-step')))
+		if self.giver_fair is not None and self.taker_fair.getAttribute("Gradient") < 0:
+			print("---halve the last taker "+ self.taker_fair.name + ": old step is " + str(self.taker_fair.getAttribute('Max-step')))
+			self.taker_fair.halve_step()
+			print("new step is: " + str(self.taker_fair.getAttribute('Max-step')))
 
 
 class VM_Info:
@@ -344,8 +349,8 @@ class VM_Info:
 		self.setAttribute('Rate', 0)
 		self.setAttribute('Fairness', 0)
 		self.setAttribute('Gradient', 0)
-		self.setAttribute('Max-step', 200)
-		self.setAttribute('Limit2', 200)
+		self.setAttribute('Max-step', 10000)
+		self.setAttribute('Limit2', 10000)
 		self.setAttribute('Consumed', 0)
 		self.setAttribute('Used', 0)
 		self.update(guest)
@@ -392,7 +397,6 @@ class VM_Info:
 		share = self.getAttribute('Allocated')
 		if share <= self.getAttribute('Configured') and share >= self.getAttribute('Min'):
 			self.guest.Control('balloon_target', share)
-			# self.guest.Control('balloon_target', self.getAttribute('Allocated'))
 		else:
 			self.logger.error("invalid allocation: %s", share)
 
