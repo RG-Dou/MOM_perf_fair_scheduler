@@ -9,7 +9,7 @@ Save_Root=/data/drg_data/work1/scheduler/data/compare
 Sub=SM+TSM
 
 Weight_file=/data/drg_data/work1/scheduler/main/doc/name-to-weight
-weights="0.5 0.67 1.0 1.5 2.0"
+weights="50 67 100 150 200"
 
 config_weight(){
   new_line="        WEIGHT=\"${1}\""
@@ -34,8 +34,10 @@ main(){
     config_weight $w
 
     save_path=${Save_Root}/${Sub}/${w}
-    create ${save_path}
+    create_path ${save_path}
 
     bash base.sh ${save_path}
   done
 }
+
+main

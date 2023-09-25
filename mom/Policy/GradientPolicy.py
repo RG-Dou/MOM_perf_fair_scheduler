@@ -24,12 +24,11 @@ import numpy as np
 
 DEFAULT_POLICY_NAME = "50_main_"
 Max_free = 200000
-Min_share = 40000
 Epoch = 100
 
-WARMUP_COUNT = 40
-AVE_LEN=40
-WINDOW = 40
+WARMUP_COUNT = 4
+AVE_LEN = 4
+WINDOW = 4
 
 # RPPolicy_1.0.1
 # the final version of performance fairness policy
@@ -146,8 +145,7 @@ class GradientPolicy:
 
 	def trigger_balloon(self, maps):
 		for info, blk in maps.iteritems():
-			# info.addAttribute('Allocated', blk)
-			info.addAttribute('Allocated', info.getAttribute('Balloon') + blk)
+			info.addAttribute('Allocated', blk)
 			info.setBalloon()
 
 
@@ -163,8 +161,8 @@ class GradientPolicy:
 
 
 	def warm_up(self, total_mem):
-		print("Warm_up")
 		if self.count < WARMUP_COUNT:
+			print("Warm_up")
 			self.count += 1
 			share = total_mem / len(self.VM_Infos)
 			for name, info in self.VM_Infos.iteritems():
@@ -247,6 +245,7 @@ class GradientPolicy:
 		self.check_finish(fairness)
 
 		self.logger.info("Current Fairness is %s.", fairness)
+		return True
 
 
 	def update_limit2(self):
