@@ -82,7 +82,8 @@ class GradientPolicy:
 
 	def perf_fair(self):
 		# first update all VMs gradient
-		self.update_gradient()
+		if not self.update_gradient():
+			return
 
 		# print out the performance and weight
 		self.print_performance()
@@ -223,9 +224,13 @@ class GradientPolicy:
 			p_to_w = info.getAttribute('Rate')
 			if p_to_w < 0:
 				self.logger.info("The %s has error on rate: performance is %s; weight is %s", name, info.getAttribute('Speed'), info.getAttribute('Weight'))
-				return
+				return False
 			sum_a += p_to_w * p_to_w
 			sum_b += p_to_w
+
+		if sum_a == 0:
+			self.logger.info("All VMs has 0 performance")
+			return False
 
 		fairness = sum_b * sum_b / (len(self.VM_Infos) * sum_a)
 		for name, info in self.VM_Infos.iteritems():

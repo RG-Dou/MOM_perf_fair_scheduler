@@ -8,7 +8,8 @@ Save_Path=$1
 pre_process(){
   cd ../../
   rm nohup.out
-  rmdir ${Log_Path}/*
+  echo "remove all logs in: " ${Log_Path}
+  rm -rf ${Log_Path}/*
 }
 
 # kill the momd
@@ -22,10 +23,12 @@ kill_momd(){
 }
 
 mv_log(){
-  mv ${Data_Path}/momplot-000/* ${Save_Path}
+  mv ${Log_Path}/momplot-000/* ${Save_Path}
 }
 
 main(){
+  pre_process
+
   # running momd background
   nohup python momd -c doc/mom-balloon.conf &
   # get the pid
