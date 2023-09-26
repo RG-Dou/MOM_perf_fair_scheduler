@@ -41,7 +41,7 @@ class GradientPolicy:
 							'IOwait', 'Softirq', 'System',
 							'Total', 'Speed', 'Rate', 'Allocated',
 							'Pagefault', 'Fairness'])
-		self.fit_fields = set(['users', 'standard_users', 'ave_users',
+		self.fit_fields = set(['users', 'standard_users', 'ave_users', 'Max-step',
 							'pfs', 'ave_pfs', 'ins_speed'])
 		self.VM_Infos = {}
 		self.count = 0
