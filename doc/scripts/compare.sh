@@ -11,10 +11,26 @@ Sub=SM+TSM
 Weight_file=/data/drg_data/work1/scheduler/main/doc/name-to-weight
 weights="50 67 100 150 200"
 
-config_weight(){
-  new_line="        WEIGHT=\"${1}\""
+config_file(){
+#  new_line="        WEIGHT=\"${1}\""
   # 使用 sed 命令替换文件的第29行
-  sed -i "29s/.*/$new_line/" "${Weight_file}"
+  sed -i "${1}s/.*/${2}/" "${3}"
+}
+
+config_weight(){
+  new_line="        WEIGHT=\"$1\""
+  line_num=29
+  if [ $Sub == TSM+WJ ]; then
+    line_num=33
+  fi
+  config_file ${line_num} ${new_line} ${Weight_file}
+}
+
+config_policy(){
+  new_line="policy:\"${1}\""
+  line_num=64
+  file=/data/drg_data/work1/scheduler/main/doc/mom-ballon.conf
+  config_file ${line_num} ${new_line} ${file}
 }
 
 create_path(){
@@ -40,4 +56,9 @@ main(){
   done
 }
 
+config_policy "gradient"
+main
+
+Sub=${Sub}"_LTRF"
+config_policy "wfm-longterm"
 main
