@@ -39,9 +39,9 @@ class GradientPolicy:
 		self.fields = set(['VM', 'Used', 'Swap', 'Worksize',
 							'Balloon', 'User', 'Start-time',
 							'IOwait', 'Softirq', 'System',
-							'Total', 'Speed', 'Rate', 'Allocated',
+							'Total', 'Speed', 'Rate', 'Allocated', 'Max-step',
 							'Pagefault', 'Fairness'])
-		self.fit_fields = set(['users', 'standard_users', 'ave_users', 'Max-step',
+		self.fit_fields = set(['users', 'standard_users', 'ave_users',
 							'pfs', 'ave_pfs', 'ins_speed'])
 		self.VM_Infos = {}
 		self.count = 0
