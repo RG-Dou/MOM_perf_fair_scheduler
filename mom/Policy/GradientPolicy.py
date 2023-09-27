@@ -354,7 +354,7 @@ class VM_Info:
 		self.setAttribute('Rate', 0)
 		self.setAttribute('Fairness', 0)
 		self.setAttribute('Gradient', 0)
-		self.setAttribute('Max-step', 10000)
+		self.setAttribute('Max-step', 5000)
 		self.setAttribute('Limit2', 10000)
 		self.setAttribute('Consumed', 0)
 		self.setAttribute('Used', 0)
