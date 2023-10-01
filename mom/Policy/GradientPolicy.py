@@ -66,6 +66,9 @@ class GradientPolicy:
 		else:
 			self.plotter = None
 
+	def set_step(self, step_size):
+		self.step = step_size
+
 
 	def check_finish(self, fairness):
 		fair_round = round(fairness, 3)
@@ -154,7 +157,7 @@ class GradientPolicy:
 		for guest in guest_list:
 			name = guest.Prop('name')
 			if name not in self.VM_Infos or self.VM_Infos[name] is None:
-				self.VM_Infos[name] = VM_Info(name, self.alpha, self.beta)
+				self.VM_Infos[name] = VM_Info(name, self.alpha, self.beta, self.step)
 				self.VM_Infos[name].initAttribute(guest)
 			else:
 				self.VM_Infos[name].update(guest)
@@ -278,7 +281,7 @@ class GradientPolicy:
 
 class VM_Info:
 
-	def __init__(self, name, alpha, beta):
+	def __init__(self, name, alpha, beta, step):
 		self.logger = logging.getLogger('mom.Policy.VM_Info')
 		self.name = name
 		self.attributes = {}
@@ -297,6 +300,7 @@ class VM_Info:
 			'Speed', 'Rate', 'Fairness'
 		])
 		self.setAttribute('VM', name)
+		self.setAttribute('Max-step', step)
 		self.fitting = Fitting(name, alpha, beta)
 
 

@@ -98,6 +98,7 @@ class MOM:
         # Modified by DRG
         self.config.set('main', 'policy-type', 'customized')
         self.config.set('main', 'total-mem', '1.0')
+        self.config.set('main', 'step_size', 5000)
         self.config.set('main', 'name-to-user-weights', '')
         self.config.set('main', 'name-to-vm-weights', '')
         self.config.set('main', 'name-to-user', '')

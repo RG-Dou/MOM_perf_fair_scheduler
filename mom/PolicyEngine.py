@@ -75,6 +75,7 @@ class PolicyEngine(threading.Thread):
             beta = float(self.config.get('main', 'beta'))
             self.policy = GradientPolicy()
             self.policy.set_policy(policy_type, total_mem, plot_dir, alpha, beta)
+            self.policy.set_step(self.config.get('main', 'step_size'))
 
 
         self.start()
