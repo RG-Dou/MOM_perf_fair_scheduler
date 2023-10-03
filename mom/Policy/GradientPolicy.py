@@ -271,15 +271,16 @@ class GradientPolicy:
 	def update_step(self):
 		for name, info in self.VM_Infos.iteritems():
 			if info.grad_direct == 'down' and info.getAttribute("Gradient") > 0:
+				print("---halve the last giver "+ info.name + ": old step is " + str(info.getAttribute('Max-step')))
 				info.halve_step()
 			elif info.grad_direct == 'up' and info.getAttribute("Gradient") < 0:
+				print("---halve the last taker "+ info.name + ": old step is " + str(info.getAttribute('Max-step')))
 				info.halve_step()
 			if info.getAttribute("Gradient") < 0:
 				info.grad_direct = 'down'
 			elif info.getAttribute("Gradient") > 0:
 				info.grad_direct = 'up'
 		# if self.giver_fair is not None and self.giver_fair.getAttribute("Gradient") > 0:
-		# 	print("---halve the last giver "+ self.giver_fair.name + ": old step is " + str(self.giver_fair.getAttribute('Max-step')))
 		# 	self.giver_fair.halve_step()
 		# 	print("new step is: " + str(self.giver_fair.getAttribute('Max-step')))
 		# if self.giver_fair is not None and self.taker_fair.getAttribute("Gradient") < 0:
