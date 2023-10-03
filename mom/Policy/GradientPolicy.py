@@ -269,14 +269,23 @@ class GradientPolicy:
 
 
 	def update_step(self):
-		if self.giver_fair is not None and self.giver_fair.getAttribute("Gradient") > 0:
-			print("---halve the last giver "+ self.giver_fair.name + ": old step is " + str(self.giver_fair.getAttribute('Max-step')))
-			self.giver_fair.halve_step()
-			print("new step is: " + str(self.giver_fair.getAttribute('Max-step')))
-		if self.giver_fair is not None and self.taker_fair.getAttribute("Gradient") < 0:
-			print("---halve the last taker "+ self.taker_fair.name + ": old step is " + str(self.taker_fair.getAttribute('Max-step')))
-			self.taker_fair.halve_step()
-			print("new step is: " + str(self.taker_fair.getAttribute('Max-step')))
+		for name, info in self.VM_Infos.iteritems():
+			if info.grad_direct == 'down' and info.getAttribute("Gradient") > 0:
+				info.halve_step()
+			elif info.grad_direct == 'up' and info.getAttribute("Gradient") < 0:
+				info.halve_step()
+			if info.getAttribute("Gradient") < 0:
+				info.grad_direct = 'down'
+			elif info.getAttribute("Gradient") > 0:
+				info.grad_direct = 'up'
+		# if self.giver_fair is not None and self.giver_fair.getAttribute("Gradient") > 0:
+		# 	print("---halve the last giver "+ self.giver_fair.name + ": old step is " + str(self.giver_fair.getAttribute('Max-step')))
+		# 	self.giver_fair.halve_step()
+		# 	print("new step is: " + str(self.giver_fair.getAttribute('Max-step')))
+		# if self.giver_fair is not None and self.taker_fair.getAttribute("Gradient") < 0:
+		# 	print("---halve the last taker "+ self.taker_fair.name + ": old step is " + str(self.taker_fair.getAttribute('Max-step')))
+		# 	self.taker_fair.halve_step()
+		# 	print("new step is: " + str(self.taker_fair.getAttribute('Max-step')))
 
 
 class VM_Info:
@@ -300,6 +309,7 @@ class VM_Info:
 			'Speed', 'Rate', 'Fairness'
 		])
 		self.setAttribute('VM', name)
+		self.grad_direct = 'N'
 		self.setAttribute('Max-step', step)
 		self.fitting = Fitting(name, alpha, beta)
 
@@ -358,7 +368,6 @@ class VM_Info:
 		self.setAttribute('Rate', 0)
 		self.setAttribute('Fairness', 0)
 		self.setAttribute('Gradient', 0)
-		self.setAttribute('Max-step', 5000)
 		self.setAttribute('Limit2', 10000)
 		self.setAttribute('Consumed', 0)
 		self.setAttribute('Used', 0)
