@@ -518,7 +518,9 @@ class Fitting:
 		weights = np.arange(0)
 		for i in range(0, len(dist)):
 			# weight = math.pow(self.beta, dist[i]) * math.pow(self.alpha, age[i])
-			weight = 1.0 / dist[i]
+			weight = 1
+			if dist[i] > 0:
+				weight = 1.0 / dist[i]
 			weights = np.append(weights, [weight])
 		return weights
 
